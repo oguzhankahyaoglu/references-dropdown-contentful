@@ -14,6 +14,14 @@
         "name": "Entity Name",
         "default": "category",
         "required": true
+      },
+      {
+        "id": "fieldstouse",
+        "type": "Symbol",
+        "description": "Comma-seperated fields of foreign entity to show. Ex: 'title,description'",
+        "name": "Fields to use",
+        "default": "title",
+        "required": true
       }
     ]
   }

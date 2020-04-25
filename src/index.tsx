@@ -16,7 +16,7 @@ interface AppState {
     items: any[]
 }
 
-interface EntryItem{
+interface EntryItem {
     sys: EntrySys,
     fields: any
 }
@@ -50,16 +50,29 @@ export class App extends React.Component<AppProps, AppState> {
 
         // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
         this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(this.onExternalChange);
-        let entityName = (this.props.sdk.parameters.instance as any)['entityname'];
-        if(!entityName){
+        let parameters = this.props.sdk.parameters.instance as any;
+        let entityName = parameters['entityname'];
+        if (!entityName) {
             alert('Entity name is required for this dropdown!');
             throw 'Entity name is required for this dropdown!';
         }
+
+        let fieldsToUseParameter = parameters['fieldstouse'];
+        if (!fieldsToUseParameter) {
+            alert('Fields to use parameter is required for this dropdown!');
+            throw 'Fields to use parameter is required for this dropdown!';
+        }
+
         this.props.sdk.space.getPublishedEntries<EntryItem>({content_type: 'category', limit: 1000})
             .then(resp => {
                 let items = resp.items.map(r => {
-                    let title = r.fields['title'][Object.keys(r.fields['title'])[0]];
-                    return {value: r.sys.id, display: title};
+                    let display = fieldsToUseParameter.toString()
+                        .split(',')
+                        .map((p: string) => {
+                            return r.fields[p];
+                        })
+                        .join(' - ');
+                    return {value: r.sys.id, display: display};
                 });
                 this.setState({hasLoaded: true, items: items});
                 this.selectedItem = this.state.value.sys.id;
@@ -98,7 +111,8 @@ export class App extends React.Component<AppProps, AppState> {
                     value={this.selectedItem}
                     onChange={this.onChange}
                 >
-                    {this.state.items.map((item) => <option key={item.value} value={item.value}>{item.display}</option>)}
+                    {this.state.items.map((item) => <option key={item.value}
+                                                            value={item.value}>{item.display}</option>)}
                 </select>
             </div>
         );
