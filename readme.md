@@ -6,3 +6,5 @@ By using this plugin, you can adjust the foreign entity name and viola, its work
 
 # How to use
 To use this extensions, go to Extensions page in Contentful and simply give extension.json url of this repository.
+Note: you can prefer using this extension directly connected to this library (instead of Contentful Hosted) by giving the specified link:
+https://oguzhankahyaoglu.github.io/references-dropdown-contentful/build/index.html
