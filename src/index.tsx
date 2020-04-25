@@ -69,7 +69,8 @@ export class App extends React.Component<AppProps, AppState> {
                     let display = fieldsToUseParameter.toString()
                         .split(',')
                         .map((p: string) => {
-                            return r.fields[p];
+                            let value = r.fields[p][this.props.sdk.locales.default];
+                            return value;
                         })
                         .join(' - ');
                     return {value: r.sys.id, display: display};
