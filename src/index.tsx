@@ -50,8 +50,11 @@ export class App extends React.Component<AppProps, AppState> {
 
         // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
         this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(this.onExternalChange);
-        console.log('field:', this.props.sdk.field);
-        console.log('value:', this.props.sdk.field.getValue());
+        let entityName = (this.props.sdk.parameters.instance as any)['entityname'];
+        if(!entityName){
+            alert('Entity name is required for this dropdown!');
+            throw 'Entity name is required for this dropdown!';
+        }
         this.props.sdk.space.getPublishedEntries<EntryItem>({content_type: 'category', limit: 1000})
             .then(resp => {
                 let items = resp.items.map(r => {
@@ -59,7 +62,6 @@ export class App extends React.Component<AppProps, AppState> {
                     return {value: r.sys.id, display: title};
                 });
                 this.setState({hasLoaded: true, items: items});
-                console.log('state loaded:', this.state);
                 this.selectedItem = this.state.value.sys.id;
             });
     }

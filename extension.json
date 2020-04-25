@@ -9,9 +9,9 @@
     "instance": [
       {
         "id": "entityname",
-        "type": "Enum",
+        "type": "Symbol",
+        "description": "Entity name of the foreign table, like 'category'",
         "name": "Entity Name",
-        "options": [{"category": "Categories"}],
         "default": "category",
         "required": true
       }
