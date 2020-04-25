@@ -1,0 +1,20 @@
+{
+  "id": "references-dropdown",
+  "name": "references-dropdown",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Entry"
+  ],
+  "parameters" : {
+    "instance": [
+      {
+        "id": "entityname",
+        "type": "Enum",
+        "name": "Entity Name",
+        "options": [{"category": "Categories"}],
+        "default": "category",
+        "required": true
+      }
+    ]
+  }
+}
