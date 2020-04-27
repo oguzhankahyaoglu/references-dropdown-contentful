@@ -62,14 +62,36 @@ export class App extends React.Component<AppProps, AppState> {
             alert('Fields to use parameter is required for this dropdown!');
             throw 'Fields to use parameter is required for this dropdown!';
         }
-
-        this.props.sdk.space.getPublishedEntries<EntryItem>({content_type: 'category', limit: 1000})
+        let lang = this.props.sdk.locales.default;
+        this.props.sdk.space.getPublishedEntries<EntryItem>({content_type: entityName, limit: 1000, include: 2})
             .then(resp => {
+                let includes = (resp as any).includes;
+                if(includes)
+                    includes = includes['Entry'] as any[];
+
                 let items = resp.items.map(r => {
                     let display = fieldsToUseParameter.toString()
                         .split(',')
                         .map((p: string) => {
-                            let value = r.fields[p][this.props.sdk.locales.default];
+                            //if navigation property, then resolve it
+                            if(p.indexOf('.')> -1 && includes && includes.length){
+                                let npProperty = p.split('.')[0];
+                                //Category = object {en.sys.id }
+                                if(typeof r.fields[npProperty] == 'object'){
+                                    let npTextField = p.split('.')[1];
+                                    let pathId = r.fields[npProperty][lang]['sys']['id'];
+                                    if(pathId){
+                                        let pathItem = includes.find(x=> x.sys.id == pathId);
+                                        if(pathItem){
+                                            let pathField = pathItem['fields'][npTextField][lang];
+                                            if(pathField)
+                                                return pathField;
+                                        }
+                                    }
+                                }
+                            }
+                            //else default string value return
+                            let value = r.fields[p][lang];
                             return value;
                         })
                         .join(' - ');
