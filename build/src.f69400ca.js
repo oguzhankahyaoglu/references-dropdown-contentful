@@ -47435,7 +47435,10 @@ function (_super) {
     var _this = _super.call(this, props) || this;
 
     _this.detachExternalChangeHandler = null;
-    _this.selectedItem = "";
+
+    _this.selectedItem = function () {
+      return _this.state && _this.state.value && _this.state.value.sys ? _this.state.value.sys.id : undefined;
+    };
 
     _this.onExternalChange = function (value) {
       _this.setState({
@@ -47451,7 +47454,6 @@ function (_super) {
             case 0:
               value = e.currentTarget.value;
               console.log('new value:', value, 'selectedItem', this.selectedItem, 'state', this.state);
-              this.selectedItem = value;
               if (!value) return [3
               /*break*/
               , 2];
@@ -47492,9 +47494,9 @@ function (_super) {
       }
 
       return React.createElement("div", null, React.createElement("select", {
-        value: _this.selectedItem,
+        value: _this.selectedItem(),
         onChange: _this.onChange
-      }, _this.state.items.map(function (item) {
+      }, React.createElement("option", null, "---"), _this.state.items.map(function (item) {
         return React.createElement("option", {
           key: item.value,
           value: item.value
@@ -47582,13 +47584,14 @@ function (_super) {
           display: display
         };
       });
+      items = items.sort(function (a, b) {
+        return b.display.localeCompare(a.display);
+      });
 
       _this.setState({
         hasLoaded: true,
         items: items
       });
-
-      _this.selectedItem = _this.state.value.sys.id;
     });
   };
 
@@ -47643,7 +47646,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63174" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55519" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
